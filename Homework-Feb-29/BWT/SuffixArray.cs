@@ -1,7 +1,19 @@
+// <copyright file="SuffixArray.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace BWT;
 
+/// <summary>
+/// Class that can build suffix array.
+/// </summary>
 public static class SuffixArray
 {
+    /// <summary>
+    /// Build suffix array by the source string.
+    /// </summary>
+    /// <param name="sourceString">String by which you want to build a suffix array.</param>
+    /// <returns>Suffix array.</returns>
     public static List<int> BuildSuffixArray(string sourceString)
     {
         var suffixArray = Enumerable.Range(0, sourceString.Length).ToList();

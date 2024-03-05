@@ -1,11 +1,23 @@
+// <copyright file="BWT.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace BWT;
 
 using System.Text;
 
+/// <summary>
+/// Burrows–Wheeler transform.
+/// </summary>
 public static class BWT
 {
     private const int AlphabetSize = 256;
 
+    /// <summary>
+    /// Direct Burrows–Wheeler transform.
+    /// </summary>
+    /// <param name="sourceString">String you want to transform.</param>
+    /// <returns>Transformed string, source string position(is needed for reverse transform).</returns>
     public static (string, int) Transform(string sourceString)
     {
         var suffixArray = SuffixArray.BuildSuffixArray(sourceString);
@@ -22,6 +34,12 @@ public static class BWT
         return (transformResult.ToString(), sourceStringPosition);
     }
 
+    /// <summary>
+    /// Reverse Burrows–Wheeler transform.
+    /// </summary>
+    /// <param name="transformedString">String obtained by direct transform.</param>
+    /// <param name="sourceStringPosition">Source string position obtained during the direct transform.</param>
+    /// <returns>Source string.</returns>
     public static string ReverseTransform(string transformedString, int sourceStringPosition)
     {
         // Count char frequency in the transformed string (char := character)

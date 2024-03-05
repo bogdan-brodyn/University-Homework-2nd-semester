@@ -1,5 +1,10 @@
-﻿namespace BWT;
+﻿// <copyright file="Program.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
+namespace BWT;
+
+#pragma warning disable SA1600 // Elements should be documented
 public class Program
 {
     public static void Main(string[] args)
