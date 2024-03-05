@@ -1,10 +1,10 @@
-using System.Text;
-
 namespace BWT;
+
+using System.Text;
 
 public static class BWT
 {
-    const int AlphabetSize = 256;
+    private const int AlphabetSize = 256;
 
     public static (string, int) Transform(string sourceString)
     {
@@ -18,6 +18,7 @@ public static class BWT
             transformResult.Append(sourceString[charIndex]);
             sourceStringPosition = suffixArray[i] != 0 ? sourceStringPosition : i;
         }
+
         return (transformResult.ToString(), sourceStringPosition);
     }
 
@@ -29,23 +30,26 @@ public static class BWT
         {
             ++charCountArray[character];
         }
+
         // Count chars in the transformed string that are less than current one
         var preffixSummArray = new int[AlphabetSize];
         for (var currentChar = 1; currentChar < AlphabetSize; ++currentChar)
         {
-            preffixSummArray[currentChar] = preffixSummArray[currentChar - 1] 
+            preffixSummArray[currentChar] = preffixSummArray[currentChar - 1]
                                             + charCountArray[currentChar - 1];
         }
+
         // Build reverse permutation
         var usedCharCountArray = new int[AlphabetSize];
         var reversePermutation = new int[transformedString.Length];
         for (var i = 0; i < transformedString.Length; ++i)
         {
             var currentChar = transformedString[i];
-            reversePermutation[preffixSummArray[currentChar] 
+            reversePermutation[preffixSummArray[currentChar]
                                 + usedCharCountArray[currentChar]] = i;
             ++usedCharCountArray[currentChar];
         }
+
         // Build source string
         var sourceString = new char[transformedString.Length];
         for (var i = 0; i < transformedString.Length; ++i)
@@ -53,6 +57,7 @@ public static class BWT
             sourceString[i] = transformedString[reversePermutation[sourceStringPosition]];
             sourceStringPosition = reversePermutation[sourceStringPosition];
         }
-        return string.Join("", sourceString);
+
+        return string.Join(string.Empty, sourceString);
     }
 }

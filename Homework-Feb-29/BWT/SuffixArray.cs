@@ -11,13 +11,12 @@ public static class SuffixArray
     }
 
     private static int CompareSuffixes(
-        string sourceString, 
-        int firstSuffixStartPosition, 
+        string sourceString,
+        int firstSuffixStartPosition,
         int secondSuffixStartPosition)
     {
         for (var i = 0; i < sourceString.Length; ++i)
         {
-
             int charDiff = sourceString[(firstSuffixStartPosition + i) % sourceString.Length]
                             - sourceString[(secondSuffixStartPosition + i) % sourceString.Length];
             if (charDiff != 0)
@@ -25,6 +24,7 @@ public static class SuffixArray
                 return charDiff;
             }
         }
+
         return 0;
     }
 
