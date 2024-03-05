@@ -11,8 +11,6 @@ using System.Text;
 /// </summary>
 public static class BWT
 {
-    private const int AlphabetSize = 256;
-
     /// <summary>
     /// Direct Burrows–Wheeler transform.
     /// </summary>
@@ -43,29 +41,34 @@ public static class BWT
     public static string ReverseTransform(string transformedString, int sourceStringPosition)
     {
         // Count char frequency in the transformed string (char := character)
-        var charCountArray = new int[AlphabetSize];
+        var charCountDictionary = new SortedDictionary<char, int>();
         foreach (var character in transformedString)
         {
-            ++charCountArray[character];
+            charCountDictionary.TryGetValue(character, out var count); // NB: count := 0 if key is not found
+            charCountDictionary.Remove(character);
+            charCountDictionary.Add(character, count + 1);
         }
 
         // Count chars in the transformed string that are less than current one
-        var preffixSummArray = new int[AlphabetSize];
-        for (var currentChar = 1; currentChar < AlphabetSize; ++currentChar)
+        var lessCharCounter = 0;
+        var preffixSummDictionary = new SortedDictionary<char, int>();
+        foreach (var (character, count) in charCountDictionary)
         {
-            preffixSummArray[currentChar] = preffixSummArray[currentChar - 1]
-                                            + charCountArray[currentChar - 1];
+            preffixSummDictionary.Add(character, lessCharCounter);
+            lessCharCounter += count;
         }
 
         // Build reverse permutation
-        var usedCharCountArray = new int[AlphabetSize];
+        var usedCharCountDictionary = new SortedDictionary<char, int>();
         var reversePermutation = new int[transformedString.Length];
         for (var i = 0; i < transformedString.Length; ++i)
         {
             var currentChar = transformedString[i];
-            reversePermutation[preffixSummArray[currentChar]
-                                + usedCharCountArray[currentChar]] = i;
-            ++usedCharCountArray[currentChar];
+            preffixSummDictionary.TryGetValue(currentChar, out var preffixSumm);
+            usedCharCountDictionary.TryGetValue(currentChar, out var usedCharCount); // NB: usedCharCount := 0 if key is not found
+            usedCharCountDictionary.Remove(currentChar);
+            reversePermutation[preffixSumm + usedCharCount] = i;
+            usedCharCountDictionary.Add(currentChar, usedCharCount + 1);
         }
 
         // Build source string
