@@ -2,30 +2,26 @@ using System.Text;
 
 namespace BWT;
 
-class BWT
+public static class BWT
 {
     const int AlphabetSize = 256;
 
-    public static Tuple<string, int> Transform(string sourceString)
+    public static (string, int) Transform(string sourceString)
     {
         var suffixArray = SuffixArray.BuildSuffixArray(sourceString);
         var transformResult = new StringBuilder();
-        int sourceStringPos = 0;
-        for (int i = 0; i < suffixArray.Count; ++i)
+        var sourceStringPosition = 0;
+        for (var i = 0; i < suffixArray.Count; ++i)
         {
-            transformResult.Append(sourceString[
-                (suffixArray[i] + sourceString.Length - 1) % sourceString.Length]);
-            sourceStringPos = suffixArray[i] != 0 ? sourceStringPos : i;
+            var charIndex = suffixArray[i] + sourceString.Length - 1;
+            charIndex %= sourceString.Length;
+            transformResult.Append(sourceString[charIndex]);
+            sourceStringPosition = suffixArray[i] != 0 ? sourceStringPosition : i;
         }
-        return new Tuple<string, int>(transformResult.ToString(), sourceStringPos);
+        return (transformResult.ToString(), sourceStringPosition);
     }
 
-    public static string ReverseTransform(Tuple<string, int> directTransformResult)
-    {
-        return ReverseTransform(directTransformResult.Item1, directTransformResult.Item2);
-    }
-
-    public static string ReverseTransform(string transformedString, int suffixArrayPos)
+    public static string ReverseTransform(string transformedString, int sourceStringPosition)
     {
         // Count char frequency in the transformed string (char := character)
         var charCountArray = new int[AlphabetSize];
@@ -35,7 +31,7 @@ class BWT
         }
         // Count chars in the transformed string that are less than current one
         var preffixSummArray = new int[AlphabetSize];
-        for (int currentChar = 1; currentChar < AlphabetSize; ++currentChar)
+        for (var currentChar = 1; currentChar < AlphabetSize; ++currentChar)
         {
             preffixSummArray[currentChar] = preffixSummArray[currentChar - 1] 
                                             + charCountArray[currentChar - 1];
@@ -43,19 +39,19 @@ class BWT
         // Build reverse permutation
         var usedCharCountArray = new int[AlphabetSize];
         var reversePermutation = new int[transformedString.Length];
-        for (int i = 0; i < transformedString.Length; ++i)
+        for (var i = 0; i < transformedString.Length; ++i)
         {
             var currentChar = transformedString[i];
             reversePermutation[preffixSummArray[currentChar] 
-                                        + usedCharCountArray[currentChar]] = i;
+                                + usedCharCountArray[currentChar]] = i;
             ++usedCharCountArray[currentChar];
         }
         // Build source string
         var sourceString = new char[transformedString.Length];
-        for (int i = 0; i < transformedString.Length; ++i)
+        for (var i = 0; i < transformedString.Length; ++i)
         {
-            sourceString[i] = transformedString[reversePermutation[suffixArrayPos]];
-            suffixArrayPos = reversePermutation[suffixArrayPos];
+            sourceString[i] = transformedString[reversePermutation[sourceStringPosition]];
+            sourceStringPosition = reversePermutation[sourceStringPosition];
         }
         return string.Join("", sourceString);
     }

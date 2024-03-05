@@ -1,25 +1,25 @@
 namespace BWT;
 
-static class SuffixArray
+public static class SuffixArray
 {
     public static List<int> BuildSuffixArray(string sourceString)
     {
-        var suffixArray = new List<int>();
-        for (var i = 0; i < sourceString.Length; ++i)
-        {
-            suffixArray.Add(i);
-        }
+        var suffixArray = Enumerable.Range(0, sourceString.Length).ToList();
         SortSuffixArray(sourceString, suffixArray);
+
         return suffixArray;
     }
 
-    private static int CompareSuffix(string sourceString, 
-        int suffixStartPos1, int suffixStartPos2)
+    private static int CompareSuffixes(
+        string sourceString, 
+        int firstSuffixStartPosition, 
+        int secondSuffixStartPosition)
     {
-        for (int i = 0; i < sourceString.Length; ++i)
+        for (var i = 0; i < sourceString.Length; ++i)
         {
-            int charDiff = sourceString[(suffixStartPos1 + i) % sourceString.Length]
-                        - sourceString[(suffixStartPos2 + i) % sourceString.Length];
+
+            int charDiff = sourceString[(firstSuffixStartPosition + i) % sourceString.Length]
+                            - sourceString[(secondSuffixStartPosition + i) % sourceString.Length];
             if (charDiff != 0)
             {
                 return charDiff;
@@ -30,13 +30,13 @@ static class SuffixArray
 
     private static void SortSuffixArray(string sourceString, List<int> suffixArray)
     {
-        for (int i = 0; i < suffixArray.Count; ++i)
+        for (var i = 0; i < suffixArray.Count; ++i)
         {
-            for (int j = 1; j < suffixArray.Count - i; ++j)
+            for (var j = 1; j < suffixArray.Count - i; ++j)
             {
-                if (CompareSuffix(sourceString, suffixArray[j-1], suffixArray[j]) > 0)
+                if (CompareSuffixes(sourceString, suffixArray[j - 1], suffixArray[j]) > 0)
                 {
-                    (suffixArray[j-1], suffixArray[j]) = (suffixArray[j], suffixArray[j-1]);
+                    (suffixArray[j - 1], suffixArray[j]) = (suffixArray[j], suffixArray[j - 1]);
                 }
             }
         }
