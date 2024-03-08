@@ -36,6 +36,11 @@ public static class BWT
     /// <returns>Source string.</returns>
     public static string ReverseTransform(string transformedString, int sourceStringPosition)
     {
+        if (transformedString == string.Empty)
+        {
+            return string.Empty;
+        }
+
         if (sourceStringPosition < 0 || sourceStringPosition >= transformedString.Length)
         {
             throw new Exception("Wrong source string position!");

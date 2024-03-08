@@ -5,7 +5,6 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        BWT.ReverseTransform("aaa", -1);
         var (passedTestsCount, testsCount) = RunTests();
         Console.WriteLine($"Program has passed {passedTestsCount}/{testsCount} tests");
     }
