@@ -1,14 +1,11 @@
-﻿// <copyright file="Program.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace BWT;
+﻿namespace BWT;
 
 #pragma warning disable SA1600 // Elements should be documented
 public class Program
 {
     public static void Main(string[] args)
     {
+        BWT.ReverseTransform("aaa", -1);
         var (passedTestsCount, testsCount) = RunTests();
         Console.WriteLine($"Program has passed {passedTestsCount}/{testsCount} tests");
     }

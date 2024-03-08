@@ -1,7 +1,3 @@
-// <copyright file="BWT.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace BWT;
 
 using System.Text;
@@ -40,27 +36,54 @@ public static class BWT
     /// <returns>Source string.</returns>
     public static string ReverseTransform(string transformedString, int sourceStringPosition)
     {
-        // Count char frequency in the transformed string (char := character)
+        if (sourceStringPosition < 0 || sourceStringPosition >= transformedString.Length)
+        {
+            throw new Exception("Wrong source string position!");
+        }
+
+        var charCountDictionary = CountCharFrequency(transformedString);
+
+        // Count chars in the transformed string that are less than current one
+        var preffixSummDictionary = CountPreffixSumm(charCountDictionary);
+
+        var reversePermutation = BuildReversePermutation(preffixSummDictionary, transformedString);
+
+        return BuildSourceString(transformedString, sourceStringPosition, reversePermutation);
+    }
+
+    private static SortedDictionary<char, int> CountCharFrequency(string sourceString)
+    {
         var charCountDictionary = new SortedDictionary<char, int>();
-        foreach (var character in transformedString)
+        foreach (var character in sourceString)
         {
             charCountDictionary.TryGetValue(character, out var count); // NB: count := 0 if key is not found
             charCountDictionary.Remove(character);
             charCountDictionary.Add(character, count + 1);
         }
 
-        // Count chars in the transformed string that are less than current one
-        var lessCharCounter = 0;
+        return charCountDictionary;
+    }
+
+    private static SortedDictionary<char, int> CountPreffixSumm(
+        SortedDictionary<char, int> sourceDictionary)
+    {
         var preffixSummDictionary = new SortedDictionary<char, int>();
-        foreach (var (character, count) in charCountDictionary)
+        var lessCharCounter = 0;
+        foreach (var (character, count) in sourceDictionary)
         {
             preffixSummDictionary.Add(character, lessCharCounter);
             lessCharCounter += count;
         }
 
-        // Build reverse permutation
-        var usedCharCountDictionary = new SortedDictionary<char, int>();
+        return preffixSummDictionary;
+    }
+
+    private static int[] BuildReversePermutation(
+        SortedDictionary<char, int> preffixSummDictionary,
+        string transformedString)
+    {
         var reversePermutation = new int[transformedString.Length];
+        var usedCharCountDictionary = new SortedDictionary<char, int>();
         for (var i = 0; i < transformedString.Length; ++i)
         {
             var currentChar = transformedString[i];
@@ -71,7 +94,14 @@ public static class BWT
             usedCharCountDictionary.Add(currentChar, usedCharCount + 1);
         }
 
-        // Build source string
+        return reversePermutation;
+    }
+
+    private static string BuildSourceString(
+        string transformedString,
+        int sourceStringPosition,
+        int[] reversePermutation)
+    {
         var sourceString = new char[transformedString.Length];
         for (var i = 0; i < transformedString.Length; ++i)
         {
