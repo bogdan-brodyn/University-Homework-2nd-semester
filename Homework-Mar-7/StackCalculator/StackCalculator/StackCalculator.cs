@@ -5,7 +5,9 @@ using System.Text;
 /// <summary>
 /// Implements the execution of operations +, -, *, / on an arithmetic expression as a string in a postfix entry.
 /// </summary>
-public static class StackCalculator
+/// <typeparam name="TStack">Stack implementation.</typeparam>
+public static class StackCalculator<TStack>
+    where TStack : IStack<double>, new()
 {
     private static readonly Dictionary<string, Func<double, double, double>> Operations = new ()
     {
@@ -39,7 +41,7 @@ public static class StackCalculator
             throw new InvalidOperationException("Expression is empty string");
         }
 
-        var stack = new Stack<double>();
+        var stack = new TStack();
         var expressionElement = new StringBuilder();
         for (var i = 0; i < expression.Length; ++i)
         {
@@ -86,7 +88,7 @@ public static class StackCalculator
         return stack.Pop();
     }
 
-    private static void Process(string nextExpressionElement, Stack<double> stack)
+    private static void Process(string nextExpressionElement, TStack stack)
     {
         bool isOperation = Operations.TryGetValue(nextExpressionElement, out var operation);
         if (isOperation && operation is not null)

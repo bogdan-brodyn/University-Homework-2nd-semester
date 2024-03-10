@@ -27,8 +27,10 @@ public class TestStackCalculator
     [TestCase("1 2 / 3 / 5 / 7 /", 1 / 210d)]
     public void TestValidInputData(string expression, double expectedResult)
     {
-        var actualResult = StackCalculator.Calculate(expression);
-        Assert.That(Math.Abs(actualResult - expectedResult), Is.LessThan(1e-10));
+        var actualResult1 = StackCalculator<StackOnList<double>>.Calculate(expression);
+        Assert.That(Math.Abs(actualResult1 - expectedResult), Is.LessThan(1e-10));
+        var actualResult2 = StackCalculator<StackOnPointers<double>>.Calculate(expression);
+        Assert.That(Math.Abs(actualResult2 - expectedResult), Is.LessThan(1e-10));
     }
 
     /// <summary>
@@ -55,7 +57,10 @@ public class TestStackCalculator
 #pragma warning restore SA1515 // Single-line comment should be preceded by blank line
     public void TestInvalidOperationException(string expression)
     {
-        Assert.Throws<InvalidOperationException>(() => StackCalculator.Calculate(expression));
+        Assert.Throws<InvalidOperationException>(
+            () => StackCalculator<StackOnList<double>>.Calculate(expression));
+        Assert.Throws<InvalidOperationException>(
+            () => StackCalculator<StackOnPointers<double>>.Calculate(expression));
     }
 
     /// <summary>
@@ -65,6 +70,9 @@ public class TestStackCalculator
     [TestCase("1 0 /")]
     public void TestDivideByZeroException(string expression)
     {
-        Assert.Throws<DivideByZeroException>(() => StackCalculator.Calculate(expression));
+        Assert.Throws<DivideByZeroException>(
+            () => StackCalculator<StackOnList<double>>.Calculate(expression));
+        Assert.Throws<DivideByZeroException>(
+            () => StackCalculator<StackOnPointers<double>>.Calculate(expression));
     }
 }
