@@ -17,8 +17,14 @@ public class Trie
     /// </summary>
     /// <param name="element">The element to check.</param>
     /// <returns>True if the element is contained.</returns>
+    /// <exception cref="ArgumentException">Thrown if the argument is an empty string.</exception>
     public bool Contains(string element)
     {
+        if (element == string.Empty)
+        {
+            throw new ArgumentException($"The {nameof(element)} is an empty string");
+        }
+
         var currentVertex = this.root;
         foreach (var currentChar in element)
         {
@@ -39,8 +45,14 @@ public class Trie
     /// </summary>
     /// <param name="element">Element to add.</param>
     /// <returns>True if the element was not previously contained.</returns>
+    /// <exception cref="ArgumentException">Thrown if the argument is an empty string.</exception>
     public bool Add(string element)
     {
+        if (element == string.Empty)
+        {
+            throw new ArgumentException($"The {nameof(element)} is an empty string");
+        }
+
         if (this.Contains(element))
         {
             return false;
@@ -70,8 +82,14 @@ public class Trie
     /// </summary>
     /// <param name="prefix">The prefix.</param>
     /// <returns>Count of elements starting with the prefix.</returns>
+    /// <exception cref="ArgumentException">Thrown if the argument is an empty string.</exception>
     public int HowManyStartsWithPrefix(string prefix)
     {
+        if (prefix == string.Empty)
+        {
+            throw new ArgumentException($"The {nameof(prefix)} is an empty string");
+        }
+
         var currentVertex = this.root;
         foreach (var currentChar in prefix)
         {
@@ -92,8 +110,14 @@ public class Trie
     /// </summary>
     /// <param name="element">The element to remove.</param>
     /// <returns>True if the element was contained.</returns>
+    /// <exception cref="ArgumentException">Thrown if the argument is an empty string.</exception>
     public bool Remove(string element)
     {
+        if (element == string.Empty)
+        {
+            throw new ArgumentException($"The {nameof(element)} is an empty string");
+        }
+
         if (!this.Contains(element))
         {
             return false;

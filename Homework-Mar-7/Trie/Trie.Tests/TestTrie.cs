@@ -91,4 +91,17 @@ public class TestTrie
             Assert.That(trie.HowManyStartsWithPrefix("a"), Is.EqualTo(3));
         });
     }
+
+    /// <summary>
+    /// Checks if Trie data structure methods throw argument exception.
+    /// </summary>
+    [Test]
+    public void CheckArgumentExceptionThrown()
+    {
+        var trie = new Trie();
+        Assert.Throws<ArgumentException>(() => trie.Add(string.Empty));
+        Assert.Throws<ArgumentException>(() => trie.Contains(string.Empty));
+        Assert.Throws<ArgumentException>(() => trie.Remove(string.Empty));
+        Assert.Throws<ArgumentException>(() => trie.HowManyStartsWithPrefix(string.Empty));
+    }
 }
