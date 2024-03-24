@@ -10,7 +10,7 @@ public class Trie
     /// <summary>
     /// Gets elements count.
     /// </summary>
-    public int Size { get; private set; } = 0;
+    public int Size => this.root.Count;
 
     /// <summary>
     /// Check if the element is contained.
@@ -20,10 +20,7 @@ public class Trie
     /// <exception cref="ArgumentException">Thrown if the argument is an empty string.</exception>
     public bool Contains(string element)
     {
-        if (element == string.Empty)
-        {
-            throw new ArgumentException($"The {nameof(element)} is an empty string");
-        }
+        ArgumentException.ThrowIfNullOrEmpty(element);
 
         var currentVertex = this.root;
         foreach (var currentChar in element)
@@ -48,17 +45,14 @@ public class Trie
     /// <exception cref="ArgumentException">Thrown if the argument is an empty string.</exception>
     public bool Add(string element)
     {
-        if (element == string.Empty)
-        {
-            throw new ArgumentException($"The {nameof(element)} is an empty string");
-        }
+        ArgumentException.ThrowIfNullOrEmpty(element);
 
         if (this.Contains(element))
         {
             return false;
         }
 
-        this.Size++;
+        this.root.Count++;
         var currentVertex = this.root;
         foreach (var currentChar in element)
         {
@@ -85,10 +79,7 @@ public class Trie
     /// <exception cref="ArgumentException">Thrown if the argument is an empty string.</exception>
     public int HowManyStartsWithPrefix(string prefix)
     {
-        if (prefix == string.Empty)
-        {
-            throw new ArgumentException($"The {nameof(prefix)} is an empty string");
-        }
+        ArgumentException.ThrowIfNullOrEmpty(prefix);
 
         var currentVertex = this.root;
         foreach (var currentChar in prefix)
@@ -113,17 +104,14 @@ public class Trie
     /// <exception cref="ArgumentException">Thrown if the argument is an empty string.</exception>
     public bool Remove(string element)
     {
-        if (element == string.Empty)
-        {
-            throw new ArgumentException($"The {nameof(element)} is an empty string");
-        }
+        ArgumentException.ThrowIfNullOrEmpty(element);
 
         if (!this.Contains(element))
         {
             return false;
         }
 
-        this.Size--;
+        this.root.Count--;
         var currentVertex = this.root;
         foreach (var currentChar in element)
         {
