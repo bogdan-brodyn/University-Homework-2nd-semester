@@ -15,22 +15,22 @@ public class StackOnPointers<TValue> : IStack<TValue>
     /// <exception cref="InvalidOperationException">Stack is empty.</exception>
     public TValue Pop()
     {
-        if (this.top is null)
+        if (top is null)
         {
             throw new InvalidOperationException();
         }
 
-        var topElementValue = this.top.Value;
-        this.top = this.top.NextElement;
-        this.Count--;
+        var topElementValue = top.Value;
+        top = top.NextElement;
+        Count--;
         return topElementValue;
     }
 
     /// <inheritdoc/>
     public void Push(TValue value)
     {
-        this.top = new Element(value, this.top);
-        this.Count++;
+        top = new Element(value, top);
+        Count++;
     }
 
     private class Element(TValue value, Element? nextElement)
