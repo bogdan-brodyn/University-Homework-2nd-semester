@@ -36,9 +36,9 @@ public static class StackCalculator<TStack>
     /// <exception cref="DivideByZeroException">You are trying to divide by zero.</exception>
     public static double Calculate(string expression)
     {
-        if (expression == string.Empty)
+        if (string.IsNullOrEmpty(expression))
         {
-            throw new InvalidOperationException("Expression is empty string");
+            throw new InvalidOperationException("Expression is null or empty");
         }
 
         var stack = new TStack();
