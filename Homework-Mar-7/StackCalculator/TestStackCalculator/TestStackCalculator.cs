@@ -2,16 +2,8 @@ namespace TestStackCalculator;
 
 using StackCalculator;
 
-/// <summary>
-/// Tests for StackCalculator.Calculate method.
-/// </summary>
 public class TestStackCalculator
 {
-    /// <summary>
-    /// Test on valid input data.
-    /// </summary>
-    /// <param name="expression">Test case expression.</param>
-    /// <param name="expectedResult">Expected calculation result.</param>
     [TestCase("2", 2)]
     [TestCase("+2", 2)]
     [TestCase("-2", -2)]
@@ -25,7 +17,7 @@ public class TestStackCalculator
     [TestCase("1 2 * 3 - 5 + 3 4 * /", 1 / 3d)]
     [TestCase("115 35 - -5 / 16 +", 0)]
     [TestCase("1 2 / 3 / 5 / 7 /", 1 / 210d)]
-    public void TestValidInputData(string expression, double expectedResult)
+    public void Calculate_WithCorrectInputData_ShouldReturnExpectedResult(string expression, double expectedResult)
     {
         var actualResult1 = StackCalculator<StackOnList<double>>.Calculate(expression);
         Assert.That(Math.Abs(actualResult1 - expectedResult), Is.LessThan(1e-10));
@@ -33,10 +25,6 @@ public class TestStackCalculator
         Assert.That(Math.Abs(actualResult2 - expectedResult), Is.LessThan(1e-10));
     }
 
-    /// <summary>
-    /// Test how does StackCalculator.Calculate throw InvalidOperationException.
-    /// </summary>
-    /// <param name="expression">Test case expression.</param>
 #pragma warning disable SA1515 // Single-line comment should be preceded by blank line
     // Empty string
     [TestCase("")]
@@ -55,7 +43,7 @@ public class TestStackCalculator
     [TestCase("101a2 2 +")]
     [TestCase("afs.1? 2a53ara 3b + *")]
 #pragma warning restore SA1515 // Single-line comment should be preceded by blank line
-    public void TestInvalidOperationException(string expression)
+    public void Calculate_WithIncorrectInputData_ShouldThrowInvalidOperationException(string expression)
     {
         Assert.Throws<InvalidOperationException>(
             () => StackCalculator<StackOnList<double>>.Calculate(expression));
@@ -63,12 +51,8 @@ public class TestStackCalculator
             () => StackCalculator<StackOnPointers<double>>.Calculate(expression));
     }
 
-    /// <summary>
-    /// Test how does StackCalculator.Calculate throw DivideByZeroException.
-    /// </summary>
-    /// <param name="expression">Test case expression.</param>
     [TestCase("1 0 /")]
-    public void TestDivideByZeroException(string expression)
+    public void Calculate_WithIncorrectInputData_ShouldThrowDivideByZeroException(string expression)
     {
         Assert.Throws<DivideByZeroException>(
             () => StackCalculator<StackOnList<double>>.Calculate(expression));
