@@ -1,107 +1,79 @@
 namespace Trie.Tests;
 
-/// <summary>
-/// Tests for Trie data structure.
-/// </summary>
 public class TestTrie
 {
-    /// <summary>
-    /// Checks if Add and Contains methods work correctly.
-    /// </summary>
-    [Test]
-    public void CheckAddAndContainsMethods()
+    private Trie trie;
+
+    [SetUp]
+    public void InitializeTrie()
     {
-        var trie = new Trie();
-        Assert.Multiple(() =>
-        {
-            // Add the first element
-            Assert.That(trie.Add("a"), Is.True);
-            Assert.That(trie.Contains("a"), Is.True);
-            Assert.That(trie.Add("a"), Is.False);
-            Assert.That(trie.Contains("b"), Is.False);
-            Assert.That(trie.Contains("aa"), Is.False);
-
-            // Add the second element and check the first
-            Assert.That(trie.Add("b"), Is.True);
-            Assert.That(trie.Contains("a"), Is.True);
-            Assert.That(trie.Contains("b"), Is.True);
-            Assert.That(trie.Contains("aa"), Is.False);
-
-            // Add more elements and check contain method
-            Assert.That(trie.Add("aaba"), Is.True);
-            Assert.That(trie.Add("aabb"), Is.True);
-            Assert.That(trie.Add("abaa"), Is.True);
-            Assert.That(trie.Contains("aaba"), Is.True);
-            Assert.That(trie.Contains("aabb"), Is.True);
-            Assert.That(trie.Contains("abaa"), Is.True);
-            Assert.That(trie.Contains("aa"), Is.False);
-        });
+        trie = new ();
     }
 
-    /// <summary>
-    /// Checks if Remove method works correctly.
-    /// </summary>
     [Test]
-    public void CheckRemoveMethod()
+    public void Add_WithCorrectInputData_ShouldReturnTrueIfElementIsNew()
     {
-        var trie = new Trie();
-        Assert.Multiple(() =>
+        string[] elements = { "a", "b", "aaba", "aabb", "abaa", "a12", "a1" };
+        for (var i = 0; i < elements.Length; ++i)
         {
-            // Add start elements
-            Assert.That(trie.Add("a"), Is.True);
-            Assert.That(trie.Add("aaba"), Is.True);
-            Assert.That(trie.Add("aabb"), Is.True);
-            Assert.That(trie.Add("abaa"), Is.True);
-
-            // Check remove method with the first element
-            Assert.That(trie.Remove("a"), Is.True);
-            Assert.That(trie.Contains("a"), Is.False);
-            Assert.That(trie.Remove("a"), Is.False);
-            Assert.That(trie.Contains("aaba"), Is.True);
-            Assert.That(trie.Contains("aabb"), Is.True);
-            Assert.That(trie.Contains("abaa"), Is.True);
-
-            // Check remove method with the second element
-            Assert.That(trie.Remove("aaba"), Is.True);
-            Assert.That(trie.Contains("aaba"), Is.False);
-            Assert.That(trie.Remove("aaba"), Is.False);
-            Assert.That(trie.Remove("a"), Is.False);
-            Assert.That(trie.Contains("aabb"), Is.True);
-            Assert.That(trie.Contains("abaa"), Is.True);
-        });
+            Assert.That(trie.Add(elements[i]), Is.True);
+            Assert.That(trie.Add(elements[i]), Is.False);
+            Assert.That(trie.Size, Is.EqualTo(i + 1));
+            for (var j = 0; j < elements.Length; ++j)
+            {
+                Assert.That(trie.Contains(elements[j]), j <= i ? Is.True : Is.False);
+            }
+        }
     }
 
-    /// <summary>
-    /// Checks if HowManyStartsWithPrefix method works correctly.
-    /// </summary>
     [Test]
-    public void CheckHowManyStartsWithPrefixMethod()
+    public void Remove_WithCorrectInputData_ShouldReturnTrueIfElementWasContained()
     {
-        var trie = new Trie();
-        Assert.Multiple(() =>
+        string[] elements = { "u", "h", "uh", "uuuu", "uhuhk23", "hhuk1dgd" };
+        foreach (var element in elements)
         {
-            Assert.That(trie.HowManyStartsWithPrefix("a"), Is.EqualTo(0));
-            Assert.That(trie.Add("a"), Is.True);
-            Assert.That(trie.HowManyStartsWithPrefix("a"), Is.EqualTo(1));
-            Assert.That(trie.Add("aaba"), Is.True);
-            Assert.That(trie.Add("aabb"), Is.True);
-            Assert.That(trie.Add("abaa"), Is.True);
-            Assert.That(trie.HowManyStartsWithPrefix("a"), Is.EqualTo(4));
-            Assert.That(trie.Remove("aabb"), Is.True);
-            Assert.That(trie.HowManyStartsWithPrefix("a"), Is.EqualTo(3));
-        });
+            trie.Add(element);
+        }
+
+        for (var i = 0; i < elements.Length; ++i)
+        {
+            Assert.That(trie.Remove(elements[i]), Is.True);
+            Assert.That(trie.Remove(elements[i]), Is.False);
+            Assert.That(trie.Size, Is.EqualTo(elements.Length - (i + 1)));
+            for (var j = 0; j < elements.Length; ++j)
+            {
+                Assert.That(trie.Contains(elements[j]), j <= i ? Is.False : Is.True);
+            }
+        }
     }
 
-    /// <summary>
-    /// Checks if Trie data structure methods throw argument exception.
-    /// </summary>
     [Test]
-    public void CheckArgumentExceptionThrown()
+    public void CheckHowManyStartsWithPrefix_WithCorrectInputData_ShouldReturnCount()
     {
-        var trie = new Trie();
+        Assert.That(trie.HowManyStartsWithPrefix("a"), Is.EqualTo(0));
+        trie.Add("a");
+        Assert.That(trie.HowManyStartsWithPrefix("a"), Is.EqualTo(1));
+        trie.Add("aaba");
+        trie.Add("aabb");
+        trie.Add("abaa");
+        Assert.That(trie.HowManyStartsWithPrefix("a"), Is.EqualTo(4));
+        trie.Remove("aabb");
+        Assert.That(trie.HowManyStartsWithPrefix("a"), Is.EqualTo(3));
+    }
+
+    [Test]
+    public void Add_WithIncorrectInputData_ShouldThrowArgumentException() =>
         Assert.Throws<ArgumentException>(() => trie.Add(string.Empty));
+
+    [Test]
+    public void Contains_WithIncorrectInputData_ShouldThrowArgumentException() =>
         Assert.Throws<ArgumentException>(() => trie.Contains(string.Empty));
+
+    [Test]
+    public void Remove_WithIncorrectInputData_ShouldThrowArgumentException() =>
         Assert.Throws<ArgumentException>(() => trie.Remove(string.Empty));
+
+    [Test]
+    public void HowManyStartsWithPrefix_WithIncorrectInputData_ShouldThrowArgumentException() =>
         Assert.Throws<ArgumentException>(() => trie.HowManyStartsWithPrefix(string.Empty));
-    }
 }
