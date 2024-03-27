@@ -50,6 +50,12 @@ public class TestUniqueList
     }
 
     [Test]
+    public void Remove_WithIncorrectInputData_ShouldThrowRemoveFromEmptyListException()
+    {
+        Assert.Throws<RemoveFromEmptyListException>(() => uniqueList.Remove());
+    }
+
+    [Test]
     public void ModifyAt_WithCorrectInputData()
     {
         const int elementsCount = 5;

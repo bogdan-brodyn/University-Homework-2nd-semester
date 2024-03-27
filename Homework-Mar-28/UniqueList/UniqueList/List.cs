@@ -9,10 +9,10 @@ using System.Drawing;
 public class List<TValue>
 {
     /// <summary>
-    /// TValue[] link.
+    /// TValue?[] link (inner data storage).
     /// </summary>
 #pragma warning disable SA1401 // Fields should be private
-    protected TValue[] array = new TValue[1];
+    protected TValue?[] array = new TValue?[1];
 #pragma warning restore SA1401 // Fields should be private
 
     /// <summary>
@@ -42,7 +42,15 @@ public class List<TValue>
     /// <summary>
     /// Remove an element at the list end.
     /// </summary>
-    public void Remove() => --Size;
+    public void Remove()
+    {
+        if (Size < 1)
+        {
+            throw new RemoveFromEmptyListException();
+        }
+
+        array[--Size] = default;
+    }
 
     /// <summary>
     /// Modify the value of an element the list contains.
@@ -66,7 +74,7 @@ public class List<TValue>
     /// <param name="position">Element's position.</param>
     /// <returns>Element's value.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Position argument is out of range.</exception>
-    public TValue GetBy(int position)
+    public TValue? GetBy(int position)
     {
         if (position < 0 || position >= Size)
         {
