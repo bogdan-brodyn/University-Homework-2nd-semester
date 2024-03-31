@@ -10,7 +10,7 @@ public class Trie
     /// <summary>
     /// Gets elements count.
     /// </summary>
-    public int Size => this.root.Count;
+    public int Size => root.Count;
 
     /// <summary>
     /// Check if the element is contained.
@@ -22,7 +22,7 @@ public class Trie
     {
         ArgumentException.ThrowIfNullOrEmpty(element);
 
-        var currentVertex = this.root;
+        var currentVertex = root;
         foreach (var currentChar in element)
         {
             var isContained = currentVertex.Next.TryGetValue(currentChar, out var nextVertex);
@@ -47,13 +47,13 @@ public class Trie
     {
         ArgumentException.ThrowIfNullOrEmpty(element);
 
-        if (this.Contains(element))
+        if (Contains(element))
         {
             return false;
         }
 
-        this.root.Count++;
-        var currentVertex = this.root;
+        root.Count++;
+        var currentVertex = root;
         foreach (var currentChar in element)
         {
             var isContained = currentVertex.Next.TryGetValue(currentChar, out var nextVertex);
@@ -81,7 +81,7 @@ public class Trie
     {
         ArgumentException.ThrowIfNullOrEmpty(prefix);
 
-        var currentVertex = this.root;
+        var currentVertex = root;
         foreach (var currentChar in prefix)
         {
             var isContained = currentVertex.Next.TryGetValue(currentChar, out var nextVertex);
@@ -106,13 +106,13 @@ public class Trie
     {
         ArgumentException.ThrowIfNullOrEmpty(element);
 
-        if (!this.Contains(element))
+        if (!Contains(element))
         {
             return false;
         }
 
-        this.root.Count--;
-        var currentVertex = this.root;
+        root.Count--;
+        var currentVertex = root;
         foreach (var currentChar in element)
         {
             var nextVertex = currentVertex.Next[currentChar];
