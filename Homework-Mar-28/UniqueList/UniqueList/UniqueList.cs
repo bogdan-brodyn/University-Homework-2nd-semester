@@ -34,11 +34,7 @@ public class UniqueList<TValue> : List<TValue>
     /// <exception cref="NotUniqueValueException">The new value of an element is not unique.</exception>
     public override void ModifyAt(TValue newValue, int position)
     {
-        if (position < 0 || position >= Size)
-        {
-            throw new ArgumentOutOfRangeException(nameof(position));
-        }
-
+        ThrowIfOutOfRange(position);
         if (Equals(newValue, GetBy(position)))
         {
             return;
