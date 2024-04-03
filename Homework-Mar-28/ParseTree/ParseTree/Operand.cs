@@ -17,7 +17,8 @@ internal class Operand : IParseTreeNode
     /// <param name="endPosition">End position in the expression.</param>
     internal Operand(string expression, int startPosition, out int endPosition)
     {
-        endPosition = expression.IndexOf(' ', startPosition);
+        var endings = new char[] { ' ', ')' };
+        endPosition = expression.IndexOfAny(endings, startPosition);
         if (endPosition == -1)
         {
             throw new InvalidExpressionException();
@@ -26,7 +27,7 @@ internal class Operand : IParseTreeNode
         var convertedSuccessfully = int.TryParse(
             expression.AsSpan(
                 startPosition,
-                endPosition - startPosition + 1),
+                endPosition - startPosition),
             out value);
         if (!convertedSuccessfully)
         {
@@ -39,5 +40,5 @@ internal class Operand : IParseTreeNode
 
     /// <inheritdoc/>
     void IParseTreeNode.AppendToExpression(StringBuilder expression)
-        => expression.AppendLine(value.ToString());
+        => expression.Append(value);
 }

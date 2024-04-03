@@ -21,16 +21,23 @@ internal class Operator : IParseTreeNode
     /// <param name="endPosition">End position in the expression.</param>
     internal Operator(string expression, int startPosition, out int endPosition)
     {
-        var currentPosition = startPosition;
-        InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, '(');
-        operationCharRepresentation = expression[currentPosition];
-        operation = DefineOperation(expression, currentPosition++);
-        InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, ' ');
-        leftOperand = DefineOperand(expression, currentPosition, out currentPosition);
-        InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, ' ');
-        rightOperand = DefineOperand(expression, currentPosition, out currentPosition);
-        InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, ')');
-        endPosition = currentPosition;
+        try
+        {
+            var currentPosition = startPosition;
+            InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, '(');
+            operationCharRepresentation = expression[currentPosition];
+            operation = DefineOperation(expression, currentPosition++);
+            InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, ' ');
+            leftOperand = DefineOperand(expression, currentPosition, out currentPosition);
+            InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, ' ');
+            rightOperand = DefineOperand(expression, currentPosition, out currentPosition);
+            InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, ')');
+            endPosition = currentPosition;
+        }
+        catch (Exception exception)
+        {
+            throw new InvalidExpressionException(null, exception);
+        }
 
         value = operation(leftOperand.Value, rightOperand.Value);
     }
