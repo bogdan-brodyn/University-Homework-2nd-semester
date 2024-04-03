@@ -1,5 +1,7 @@
 namespace ParseTree;
 
+using System.Text;
+
 /// <summary>
 /// Implementation of one of the types of parse tree node - the operand.
 /// </summary>
@@ -31,4 +33,11 @@ internal class Operand : IParseTreeNode
             throw new InvalidOperationException();
         }
     }
+
+    /// <inheritdoc/>
+    int IParseTreeNode.Value => value;
+
+    /// <inheritdoc/>
+    void IParseTreeNode.AppendToExpression(StringBuilder expression)
+        => expression.AppendLine(value.ToString());
 }

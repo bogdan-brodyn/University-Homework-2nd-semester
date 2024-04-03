@@ -1,5 +1,7 @@
 ﻿namespace ParseTree;
 
+using System.Text;
+
 /// <summary>
 /// Parse tree deta structure implementation.
 /// </summary>
@@ -19,5 +21,22 @@ public class ParseTree
         {
             throw new InvalidExpressionException();
         }
+    }
+
+    /// <summary>
+    /// Compute parse tree expression value.
+    /// </summary>
+    /// <returns>Expression value.</returns>
+    public int Compute() => ((IParseTreeNode)root).Value;
+
+    /// <summary>
+    /// Gets the expression in the infix notation.
+    /// </summary>
+    /// <returns>Expression.</returns>
+    public string GetExpressionInInfixNotation()
+    {
+        StringBuilder expression = new ();
+        ((IParseTreeNode)root).AppendToExpression(expression);
+        return expression.ToString();
     }
 }
