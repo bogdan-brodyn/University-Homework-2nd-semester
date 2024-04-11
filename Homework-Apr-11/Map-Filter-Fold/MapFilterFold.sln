@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapFilterFold", "MapFilterFold\MapFilterFold.csproj", "{58B68F03-27F7-4E42-A205-C11B2D2E36DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapFilterFold.Test", "MapFilterFold.Test\MapFilterFold.Test.csproj", "{397918E3-4B79-4A8B-AF80-BC2136A86834}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58B68F03-27F7-4E42-A205-C11B2D2E36DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58B68F03-27F7-4E42-A205-C11B2D2E36DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58B68F03-27F7-4E42-A205-C11B2D2E36DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58B68F03-27F7-4E42-A205-C11B2D2E36DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{397918E3-4B79-4A8B-AF80-BC2136A86834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{397918E3-4B79-4A8B-AF80-BC2136A86834}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{397918E3-4B79-4A8B-AF80-BC2136A86834}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{397918E3-4B79-4A8B-AF80-BC2136A86834}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E908DF61-2794-49D6-A182-8B7B3B4D73B1}
+	EndGlobalSection
+EndGlobal
