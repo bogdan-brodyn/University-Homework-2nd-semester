@@ -9,14 +9,15 @@ public static class MapFilterFold
     /// Apply function to each element of enumerable collection.
     /// </summary>
     /// <typeparam name="TValue">Collection elements' type.</typeparam>
+    /// <typeparam name="TFunctionReturnValue">Function return value type.</typeparam>
     /// <param name="sourceCollection">Source collection.</param>
     /// <param name="function">Function you want to apply to each element of collection.</param>
     /// <returns>Function application results list.</returns>
-    public static List<TValue> Map<TValue>(
+    public static List<TFunctionReturnValue> Map<TValue, TFunctionReturnValue>(
         IEnumerable<TValue> sourceCollection,
-        Func<TValue, TValue> function)
+        Func<TValue, TFunctionReturnValue> function)
     {
-        var functionApplicationResultsList = new List<TValue>();
+        var functionApplicationResultsList = new List<TFunctionReturnValue>();
         foreach (var element in sourceCollection)
         {
             functionApplicationResultsList.Add(function(element));
