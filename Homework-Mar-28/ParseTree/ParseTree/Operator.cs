@@ -25,11 +25,14 @@ internal class Operator : IParseTreeNode
         {
             var currentPosition = startPosition;
             InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, '(');
+
             operationCharRepresentation = expression[currentPosition];
             operation = DefineOperation(expression, currentPosition++);
             InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, ' ');
+
             leftOperand = DefineOperand(expression, currentPosition, out currentPosition);
             InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, ' ');
+
             rightOperand = DefineOperand(expression, currentPosition, out currentPosition);
             InvalidExpressionException.ThrowIfUnexpectedChar(expression, currentPosition++, ')');
             endPosition = currentPosition;
