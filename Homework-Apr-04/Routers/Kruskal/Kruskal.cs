@@ -56,10 +56,7 @@ public static class Kruskal
     }
 
     private static void UniteVerticesConnectivityComponents(
-        int[] sizes,
-        int[] parents,
-        int firstVertex,
-        int secondVertex)
+        int[] sizes, int[] parents, int firstVertex, int secondVertex)
     {
         firstVertex = GetVertexConnectivityComponent(sizes, parents, firstVertex);
         secondVertex = GetVertexConnectivityComponent(sizes, parents, secondVertex);

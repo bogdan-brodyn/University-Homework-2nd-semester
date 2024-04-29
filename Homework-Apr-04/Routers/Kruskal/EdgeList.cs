@@ -5,7 +5,7 @@ namespace Kruskal;
 /// </summary>
 public class EdgeList
 {
-    private readonly List<Edge> edgeList;
+    private readonly List<Edge> _edgeList;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EdgeList"/> class.
@@ -13,8 +13,8 @@ public class EdgeList
     /// <param name="edgeList">List of edges. Will be sorted by weights.</param>
     public EdgeList(List<Edge> edgeList)
     {
-        this.edgeList = edgeList;
-        this.edgeList.Sort(Edge.CompareEdgesByWeight);
+        _edgeList = edgeList;
+        _edgeList.Sort(Edge.CompareEdgesByWeight);
     }
 
     /// <summary>
@@ -25,7 +25,7 @@ public class EdgeList
     /// vertices must be numbered from 1 to n).</param>
     public EdgeList(StreamReader streamReader)
     {
-        edgeList = new List<Edge>();
+        _edgeList = new List<Edge>();
         var linesCounter = 1;
         for (
             var currentLine = streamReader.ReadLine();
@@ -37,21 +37,20 @@ public class EdgeList
             {
                 ParseAdjacencyListLine(currentLine);
             }
-            catch (InvalidGraphRepresentationException exception)
+            catch (InvalidGraphRepresentationException e)
             {
                 throw new InvalidGraphRepresentationException(
-                    $"The line {linesCounter} could not be processed.",
-                    exception);
+                    $"The line {linesCounter} could not be processed.", e);
             }
         }
 
-        edgeList.Sort(Edge.CompareEdgesByWeight);
+        _edgeList.Sort(Edge.CompareEdgesByWeight);
     }
 
     /// <summary>
     /// Gets <see cref="EdgeList"/> contained edges count.
     /// </summary>
-    public int EdgesCount => edgeList.Count;
+    public int EdgesCount => _edgeList.Count;
 
     /// <summary>
     /// Gets <see cref="EdgeList"/> contained vertices count.
@@ -63,7 +62,7 @@ public class EdgeList
     /// </summary>
     /// <param name="index">Index of edge you want to get.</param>
     /// <returns>Edge in <see cref="EdgeList"/> by index.</returns>
-    public Edge GetEdge(int index) => edgeList[index];
+    public Edge GetEdge(int index) => _edgeList[index];
 
     private static int GetNumberFromLine(string line, int startPosition, out int endPosition)
     {
@@ -103,7 +102,7 @@ public class EdgeList
             var edgeWeight = GetNumberFromLine(adjacencyListLine, currentPosition, out currentPosition);
             InvalidGraphRepresentationException.ThrowIfUnexpectedChar(adjacencyListLine, currentPosition++, ')');
 
-            edgeList.Add(new Edge(lesserVertex, greaterVertex, edgeWeight));
+            _edgeList.Add(new Edge(lesserVertex, greaterVertex, edgeWeight));
 
             if (currentPosition == adjacencyListLine.Length)
             {

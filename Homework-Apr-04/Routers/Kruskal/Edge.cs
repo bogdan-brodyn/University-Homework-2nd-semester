@@ -53,7 +53,6 @@ public readonly struct Edge
     /// <returns>A signed number indicating the relative values of this instance and value.</returns>
     public static int CompareEdgesByWeight(Edge firstEdge, Edge secondEdge)
     {
-        4.CompareTo(2);
         var deltaWeight = secondEdge.EdgeWeight - firstEdge.EdgeWeight;
         var deltaLesserVertex = firstEdge.LesserVertex - secondEdge.LesserVertex;
         var deltaGreaterVertex = firstEdge.GreaterVertex - secondEdge.GreaterVertex;
