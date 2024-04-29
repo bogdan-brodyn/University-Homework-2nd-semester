@@ -9,27 +9,27 @@ public static class Kruskal
     /// Kruskul algorithm for searching minimum spanning tree.
     /// </summary>
     /// <param name="edgeList">Edges' list representation of the graph whose minimum spanning tree you need.</param>
-    /// <returns>Minimum spanning tree.</returns>
-    public static EdgeList GetMinimumSpanningTree(EdgeList edgeList)
+    /// <returns>Minimum spanning tree if it could be build, otherwise null.</returns>
+    public static List<Edge>? GetMinimumSpanningTree(EdgeList edgeList)
     {
         var (sizes, parents) = Initialize(edgeList);
         var minOstov = new List<Edge>();
         for (var i = 0; i < edgeList.EdgesCount; ++i)
         {
             Edge currentEdge = edgeList.GetEdge(i);
-            if (GetVertexConnectivityComponent(sizes, parents, currentEdge.LesserVertex)
-                != GetVertexConnectivityComponent(sizes, parents, currentEdge.GreaterVertex))
+            if (GetVertexConnectivityComponent(sizes, parents, currentEdge.LesserVertex - 1)
+                != GetVertexConnectivityComponent(sizes, parents, currentEdge.GreaterVertex - 1))
             {
                 minOstov.Add(currentEdge);
                 UniteVerticesConnectivityComponents(
                     sizes,
                     parents,
-                    currentEdge.LesserVertex,
-                    currentEdge.GreaterVertex);
+                    currentEdge.LesserVertex - 1,
+                    currentEdge.GreaterVertex - 1);
             }
         }
 
-        return new EdgeList(minOstov);
+        return minOstov.Count == edgeList.VerticesCount - 1 ? minOstov : null;
     }
 
     private static (int[] Sizes, int[] Parents) Initialize(EdgeList edgeList)
@@ -52,7 +52,7 @@ public static class Kruskal
             return vertex;
         }
 
-        return parents[vertex] = GetVertexConnectivityComponent(parents, sizes, parents[vertex]);
+        return parents[vertex] = GetVertexConnectivityComponent(sizes, parents, parents[vertex]);
     }
 
     private static void UniteVerticesConnectivityComponents(
@@ -67,12 +67,12 @@ public static class Kruskal
 
         if (sizes[firstVertex] < sizes[secondVertex])
         {
-            parents[secondVertex] = firstVertex;
+            parents[firstVertex] = secondVertex;
             sizes[secondVertex] += sizes[firstVertex];
         }
         else
         {
-            parents[firstVertex] = secondVertex;
+            parents[secondVertex] = firstVertex;
             sizes[firstVertex] += sizes[secondVertex];
         }
     }

@@ -15,6 +15,10 @@ public class EdgeList
     {
         _edgeList = edgeList;
         _edgeList.Sort(Edge.CompareEdgesByWeight);
+        foreach (var edge in edgeList)
+        {
+            VerticesCount = VerticesCount >= edge.GreaterVertex ? VerticesCount : edge.GreaterVertex;
+        }
     }
 
     /// <summary>
