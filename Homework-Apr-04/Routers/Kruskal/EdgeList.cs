@@ -80,7 +80,7 @@ public class EdgeList
         var wasConvertedSuccessfully = int.TryParse(
             line.AsSpan(
                 startPosition,
-                endPosition - startPosition + 1),
+                endPosition - startPosition),
             out int conversionResult);
         if (!wasConvertedSuccessfully)
         {
