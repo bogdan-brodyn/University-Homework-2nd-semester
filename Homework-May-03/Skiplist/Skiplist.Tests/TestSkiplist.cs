@@ -80,4 +80,36 @@ public class TestSkiplist
         Assert.That(actualFirstRemoveResult, Is.True);
         Assert.That(actualSecondRemoveResult, Is.False);
     }
+
+    [Test]
+    public void TestEnumeratorUsingCommonCase()
+    {
+        // Arrange
+        var skiplist = new Skiplist<int>();
+        var itemsToAdd = new int[] { -12, -5, 0, 2, 5, 7, 10 };
+
+        // Act
+        foreach (var item in itemsToAdd)
+        {
+            skiplist.Add(item);
+        }
+
+        // Assert
+        CollectionAssert.AreEqual(expected: itemsToAdd, actual: skiplist);
+    }
+
+    [Test]
+    public void TestEnumeratorInvalidationWhenCollectionChanges()
+    {
+        // Arrange
+        var skiplist = new Skiplist<int>();
+
+        // Act
+        var enumerator = skiplist.GetEnumerator();
+        skiplist.Add(0);
+
+        // Assert
+        Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
+        Assert.Throws<InvalidOperationException>(enumerator.Reset);
+    }
 }

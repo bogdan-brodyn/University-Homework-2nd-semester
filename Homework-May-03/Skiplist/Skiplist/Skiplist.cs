@@ -44,9 +44,10 @@ public class Skiplist<T> : IList<T>
         throw new NotImplementedException();
     }
 
+    /// <inheritdoc/>
     public IEnumerator<T> GetEnumerator()
     {
-        throw new NotImplementedException();
+        return new Enumerator(this);
     }
 
     public int IndexOf(T item)
@@ -73,9 +74,10 @@ public class Skiplist<T> : IList<T>
         throw new NotImplementedException();
     }
 
+    /// <inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator()
     {
-        throw new NotImplementedException();
+        return GetEnumerator();
     }
 
     private static bool FlipFairCoin()
@@ -175,5 +177,94 @@ public class Skiplist<T> : IList<T>
         internal SkiplistNode? Next { get; set; }
 
         internal SkiplistNode? Down { get; set; }
+    }
+
+    private class Enumerator : IEnumerator<T>
+    {
+        private readonly Skiplist<T> _skiplist;
+        private readonly int _version;
+        private int _index;
+        private SkiplistNode? _current;
+
+        public Enumerator(Skiplist<T> skiplist)
+        {
+            _skiplist = skiplist;
+            _version = skiplist._version;
+            _index = -1;
+            _current = skiplist._head;
+            while (_current.Down is not null)
+            {
+                _current = _current.Down;
+            }
+        }
+
+        public T Current
+        {
+            get
+            {
+                if (_version != _skiplist._version)
+                {
+                    throw new InvalidOperationException("Enumerator you use is invalid.");
+                }
+
+                if (_index == -1 || _index == _skiplist.Count)
+                {
+                    throw new InvalidOperationException(
+                        "Couldn't get Current because Reset or MoveNext wasn't called previously");
+                }
+
+                if (_current is null || _current.Item is null)
+                {
+                    throw new InvalidOperationException(
+                        "Couldn't get Current because data structure integrity has been violated");
+                }
+
+                return _current.Item;
+            }
+        }
+
+        object IEnumerator.Current => Current;
+
+        public void Dispose()
+        {
+        }
+
+        public bool MoveNext()
+        {
+            if (_version != _skiplist._version)
+            {
+                throw new InvalidOperationException("Enumerator you use is invalid.");
+            }
+
+            if (_index == _skiplist.Count - 1)
+            {
+                return false;
+            }
+
+            if (_current is null)
+            {
+                throw new InvalidOperationException(
+                    "Couldn't advance next element because data structure integrity has been violated");
+            }
+
+            ++_index;
+            _current = _current.Next;
+            return true;
+        }
+
+        public void Reset()
+        {
+            if (_version != _skiplist._version)
+            {
+                throw new InvalidOperationException("Enumerator you use is invalid.");
+            }
+
+            _index = -1;
+            _current = _skiplist._head;
+            while (_current.Down is not null)
+            {
+                _current = _current.Down;
+            }
+        }
     }
 }
