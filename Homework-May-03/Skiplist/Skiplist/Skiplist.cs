@@ -2,6 +2,10 @@
 
 using System.Collections;
 
+/// <summary>
+/// Represents common Skiplist implementation. Sorted list with fast insert and search by key.
+/// </summary>
+/// <typeparam name="T">Type of items contained.</typeparam>
 public class Skiplist<T> : IList<T>
     where T : IComparable<T>
 {
@@ -15,7 +19,8 @@ public class Skiplist<T> : IList<T>
     /// <inheritdoc/>
     public bool IsReadOnly => false;
 
-    public T this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    /// <inheritdoc/>
+    public T this[int index] { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
 
     /// <inheritdoc/>
     public void Add(T item)
@@ -39,9 +44,18 @@ public class Skiplist<T> : IList<T>
     /// <inheritdoc/>
     public bool Contains(T item) => Contains(item, _head);
 
+    /// <inheritdoc/>
     public void CopyTo(T[] array, int arrayIndex)
     {
-        throw new NotImplementedException();
+        if (array.Length - arrayIndex != Count)
+        {
+            throw new ArgumentException("Array is not long enough");
+        }
+
+        foreach (var item in this)
+        {
+            array[arrayIndex++] = item;
+        }
     }
 
     /// <inheritdoc/>
@@ -50,9 +64,20 @@ public class Skiplist<T> : IList<T>
         return new Enumerator(this);
     }
 
+    /// <inheritdoc/>
     public int IndexOf(T item)
     {
-        throw new NotImplementedException();
+        var i = -1;
+        foreach (var skiplistItem in this)
+        {
+            ++i;
+            if (skiplistItem.CompareTo(item) == 0)
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     /// <inheritdoc/>
@@ -69,9 +94,10 @@ public class Skiplist<T> : IList<T>
         return Remove(item, _head) is not null;
     }
 
+    /// <inheritdoc/>
     public void RemoveAt(int index)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 
     /// <inheritdoc/>
