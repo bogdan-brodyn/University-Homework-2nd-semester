@@ -5,60 +5,79 @@ using Skiplist;
 public class TestSkiplist
 {
     [Test]
-    public void TestAdd()
+    public void TestAddMethodInfluenceToDataStructure_ConsequencesMustBeExpected()
     {
         // Arrange
         var skiplist = new Skiplist<int>();
-        var itemsContained = new int[] { 0, 1, 3, 3, 10, 2, 3, -100, 15, 12 };
-        var itemsNotContained = new int[] { 4, 5, -15, 4, -20, 1000, 20, 4 };
+        var itemsToAdd = new int[] { 0, 1, 3, 3, 10, 2, 3, -100, 15, 12 };
 
         // Act
-        foreach (var item in itemsContained)
+        foreach (var item in itemsToAdd)
         {
             skiplist.Add(item);
         }
 
         // Assert
-        foreach (var item in itemsContained)
+        var itemsExpectedToBeContained = itemsToAdd;
+        var itemsExpectedNotToBeContained = new int[] { 4, 5, -15, 4, -20, 1000, 20, 4 };
+        foreach (var item in itemsExpectedToBeContained)
         {
             Assert.That(skiplist.Contains(item), Is.True);
         }
 
-        foreach (var item in itemsNotContained)
+        foreach (var item in itemsExpectedNotToBeContained)
         {
             Assert.That(skiplist.Contains(item), Is.False);
         }
     }
 
     [Test]
-    public void TestRemove()
+    public void TestRemoveMethodInfluenceToDataStructure_ConsequencesMustBeExpected()
     {
         // Arrange
         var skiplist = new Skiplist<int>();
-        var itemsContained = new int[] { 0, 1, 3, 3, 10, 2, 3, -100, 15, 12, 1, 0 };
+        var itemsToAdd = new int[] { 0, 1, 3, 3, 10, 2, 3, -100, 15, 12, 1, 0 };
         var itemsToRemove = new int[] { 0, 1, 3, 10, 3, -100, 15, 3 };
-        var itemsStillContained = new int[] { 0, 1, 2, 12 };
-        var itemsNotContained = new int[] { 3, 10, -100, 15 };
-        foreach (var item in itemsContained)
+
+        // Act
+        foreach (var item in itemsToAdd)
         {
             skiplist.Add(item);
         }
 
-        // Act
         foreach (var item in itemsToRemove)
         {
-            Assert.That(skiplist.Remove(item), Is.True);
+            skiplist.Remove(item);
         }
 
         // Assert
-        foreach (var item in itemsStillContained)
+        var itemsExpectedToBeContained = new int[] { 0, 1, 2, 12 };
+        var itemsExpectedNotToBeContained = new int[] { 3, 10, -100, 15 };
+        foreach (var item in itemsExpectedToBeContained)
         {
             Assert.That(skiplist.Contains(item), Is.True);
         }
 
-        foreach (var item in itemsNotContained)
+        foreach (var item in itemsExpectedNotToBeContained)
         {
             Assert.That(skiplist.Contains(item), Is.False);
         }
+    }
+
+    [Test]
+    public void TestRemoveMethodReturnValue_MustBeExpected()
+    {
+        // Arrange
+        var skiplist = new Skiplist<int>();
+        var itemToAddThenRemoveTwice = 0;
+
+        // Act
+        skiplist.Add(itemToAddThenRemoveTwice);
+        var actualFirstRemoveResult = skiplist.Remove(itemToAddThenRemoveTwice);
+        var actualSecondRemoveResult = skiplist.Remove(itemToAddThenRemoveTwice);
+
+        // Assert
+        Assert.That(actualFirstRemoveResult, Is.True);
+        Assert.That(actualSecondRemoveResult, Is.False);
     }
 }

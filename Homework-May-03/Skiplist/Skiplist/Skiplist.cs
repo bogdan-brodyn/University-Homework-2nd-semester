@@ -6,6 +6,7 @@ public class Skiplist<T> : IList<T>
     where T : IComparable<T>
 {
     private int _count = 0;
+    private int _version = 0;
     private SkiplistNode _head = new ();
 
     /// <inheritdoc/>
@@ -19,6 +20,7 @@ public class Skiplist<T> : IList<T>
     /// <inheritdoc/>
     public void Add(T item)
     {
+        ++_version;
         ++_count;
         var nodeToBeDuplicated = Add(item, _head);
         if (nodeToBeDuplicated is not null)
@@ -35,10 +37,7 @@ public class Skiplist<T> : IList<T>
     }
 
     /// <inheritdoc/>
-    public bool Contains(T item)
-    {
-        return Contains(item, _head);
-    }
+    public bool Contains(T item) => Contains(item, _head);
 
     public void CopyTo(T[] array, int arrayIndex)
     {
@@ -64,14 +63,9 @@ public class Skiplist<T> : IList<T>
     /// <inheritdoc/>
     public bool Remove(T item)
     {
-        if (Contains(item))
-        {
-            --_count;
-            Remove(item, _head);
-            return true;
-        }
-
-        return false;
+        ++_version;
+        --_count;
+        return Remove(item, _head) is not null;
     }
 
     public void RemoveAt(int index)
@@ -133,21 +127,28 @@ public class Skiplist<T> : IList<T>
             node = node.Next;
         }
 
-        if (node.Down is not null && node.Next is null)
+        if (node.Down is null)
         {
-            Remove(item, node.Down);
+            if (node.Next is not null
+                && node.Next.Item!.CompareTo(item) == 0)
+            {
+                var nodeToRemove = node.Next;
+                node.Next = node.Next.Next;
+                return nodeToRemove;
+            }
+
             return null;
         }
 
-        if (node.Down is null
-            || object.ReferenceEquals(node.Next!.Down, Remove(item, node.Down)))
+        var removedNode = Remove(item, node.Down);
+        if (node.Next is not null
+            && ReferenceEquals(node.Next.Down, removedNode))
         {
-            var nodeToRemove = node.Next;
-            node.Next = node.Next!.Next;
-            return nodeToRemove;
+            removedNode = node.Next;
+            node.Next = node.Next.Next;
         }
 
-        return null;
+        return removedNode;
     }
 
     private class SkiplistNode
