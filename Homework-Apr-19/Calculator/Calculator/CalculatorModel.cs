@@ -5,9 +5,10 @@ namespace Calculator;
 /// </summary>
 public class CalculatorModel
 {
-    private int _firstOperand = 0;
-    private int _secondOperand = 0;
-    private Func<int, int, int>? _operator = null;
+    private int _firstOperand;
+    private int _secondOperand;
+    private Func<int, int, int>? _operator;
+    private char _operatorChar;
     private CalculatorState _state = new InitialState();
 
     /// <summary>
@@ -18,5 +19,39 @@ public class CalculatorModel
     {
         (_firstOperand, _secondOperand, _operator, _state) =
             _state.ReactToExternalInfluence(_firstOperand, _secondOperand, _operator, externalInfluenceChar);
+        if (_state is OperatorState && externalInfluenceChar != '<')
+        {
+            _operatorChar = externalInfluenceChar;
+        }
+    }
+
+    /// <summary>
+    /// Produces current expression text (infix notation).
+    /// </summary>
+    /// <returns>Current expression text.</returns>
+    /// <exception cref="Exception">Data structure integrity is violated.</exception>
+    public string GetCurrentExpressionText()
+    {
+        if (_state is InitialState)
+        {
+            return string.Empty;
+        }
+
+        if (_state is FirstOperandState)
+        {
+            return _firstOperand.ToString();
+        }
+
+        if (_state is OperatorState)
+        {
+            return $"{_firstOperand} {_operatorChar}";
+        }
+
+        if (_state is SecondOperandState)
+        {
+            return $"{_firstOperand} {_operatorChar} {_secondOperand}";
+        }
+
+        throw new Exception("Data structure integrity is violated.");
     }
 }

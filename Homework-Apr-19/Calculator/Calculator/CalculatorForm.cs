@@ -5,14 +5,15 @@ namespace Calculator;
 /// </summary>
 public class CalculatorForm : Form
 {
+    private readonly CalculatorModel _model = new ();
     private readonly Label _label = new ();
     private readonly Button[,] _buttons = new Button[4, 4];
-    private readonly string[,] _buttonTexts =
+    private readonly char[,] _buttonInfluenceToModel =
     {
-        { "7", "8", "9", "/" },
-        { "4", "5", "6", "*" },
-        { "1", "2", "3", "-" },
-        { "<", "0", "=", "+" },
+        { '7', '8', '9', '/' },
+        { '4', '5', '6', '*' },
+        { '1', '2', '3', '-' },
+        { '<', '0', '=', '+' },
     };
 
     /// <summary>
@@ -29,19 +30,25 @@ public class CalculatorForm : Form
         Resize += (sender, args) => ResizeControls();
     }
 
+    private void RewriteLabelText()
+    {
+        _label.Text = _model.GetCurrentExpressionText();
+    }
+
     private void AddControls()
     {
         Controls.Add(_label);
-        for (var y = 0; y < 4; ++y)
+        for (var row = 0; row < 4; ++row)
         {
-            for (var x = 0; x < 4; ++x)
+            for (var column = 0; column < 4; ++column)
             {
                 var button = new Button();
-                button.Text = _buttonTexts[y, x];
-
-                // button.Click +=
+                var buttonInfluenceChar = _buttonInfluenceToModel[row, column];
+                button.Text = buttonInfluenceChar.ToString();
+                button.Click += (sender, args) => _model.ReactToExternalInfluence(buttonInfluenceChar);
+                button.Click += (sender, args) => RewriteLabelText();
+                _buttons[row, column] = button;
                 Controls.Add(button);
-                _buttons[x, y] = button;
             }
         }
     }
@@ -56,15 +63,15 @@ public class CalculatorForm : Form
         _label.Location = new Point(0, 0);
         _label.Size = new Size(Size.Width, labelHeight);
 
-        for (var y = 0; y < 4; ++y)
+        for (var row = 0; row < 4; ++row)
         {
-            for (var x = 0; x < 4; ++x)
+            for (var column = 0; column < 4; ++column)
             {
-                var button = _buttons[x, y];
-                button.Location = new Point(buttonWidth * x, labelHeight + (buttonHeight * y));
+                var button = _buttons[row, column];
+                button.Location = new Point(buttonWidth * column, labelHeight + (buttonHeight * row));
                 button.Size = new Size
                 {
-                    Width = x < 3 ? buttonWidth : Size.Width - (buttonWidth * 3),
+                    Width = column < 3 ? buttonWidth : Size.Width - (buttonWidth * 3),
                     Height = buttonHeight,
                 };
             }
