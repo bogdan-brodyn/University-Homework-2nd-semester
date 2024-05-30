@@ -25,6 +25,7 @@ public class CalculatorForm : Form
         StartPosition = FormStartPosition.CenterScreen;
         Size = new Size(500, 550);
         MinimumSize = Size;
+        Font = new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Point);
         Load += (sender, args) => AddControls();
         Load += (sender, args) => ResizeControls();
         Resize += (sender, args) => ResizeControls();
@@ -55,13 +56,14 @@ public class CalculatorForm : Form
 
     private void ResizeControls()
     {
-        var minLabelHeight = 50;
-        var buttonWidth = Size.Width / 4;
-        var buttonHeight = (Size.Height - minLabelHeight) / 4;
-        var labelHeight = Size.Height - (buttonHeight * 4);
+        var minLabelHeight = 100;
+        var buttonWidth = ClientSize.Width / 4;
+        var buttonHeight = (ClientSize.Height - minLabelHeight) / 4;
+        var labelHeight = ClientSize.Height - (buttonHeight * 4);
 
         _label.Location = new Point(0, 0);
-        _label.Size = new Size(Size.Width, labelHeight);
+        _label.Size = new Size(ClientSize.Width, labelHeight);
+        _label.TextAlign = ContentAlignment.MiddleRight;
 
         for (var row = 0; row < 4; ++row)
         {
@@ -71,7 +73,7 @@ public class CalculatorForm : Form
                 button.Location = new Point(buttonWidth * column, labelHeight + (buttonHeight * row));
                 button.Size = new Size
                 {
-                    Width = column < 3 ? buttonWidth : Size.Width - (buttonWidth * 3),
+                    Width = column < 3 ? buttonWidth : ClientSize.Width - (buttonWidth * 3),
                     Height = buttonHeight,
                 };
             }
