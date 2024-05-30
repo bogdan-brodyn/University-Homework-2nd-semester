@@ -6,13 +6,6 @@ namespace Calculator;
 public abstract class CalculatorState
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CalculatorState"/> class.
-    /// </summary>
-    public CalculatorState()
-    {
-    }
-
-    /// <summary>
     /// Recognizes operator by input char.
     /// </summary>
     /// <param name="inputChar">Operator char.</param>
