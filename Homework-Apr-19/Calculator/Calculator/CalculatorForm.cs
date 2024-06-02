@@ -31,14 +31,13 @@ public class CalculatorForm : Form
         Resize += (sender, args) => ResizeControls();
     }
 
-    private void RewriteLabelText()
-    {
-        _label.Text = _model.GetCurrentExpressionText();
-    }
-
     private void AddControls()
     {
+        // Label with calculator expression text
+        _label.DataBindings.Add(new Binding("Text", _model, "CurrentExpressionText"));
         Controls.Add(_label);
+
+        // Create buttons
         for (var row = 0; row < 4; ++row)
         {
             for (var column = 0; column < 4; ++column)
@@ -47,7 +46,6 @@ public class CalculatorForm : Form
                 var buttonInfluenceChar = _buttonInfluenceToModel[row, column];
                 button.Text = buttonInfluenceChar.ToString();
                 button.Click += (sender, args) => _model.ReactToExternalInfluence(buttonInfluenceChar);
-                button.Click += (sender, args) => RewriteLabelText();
                 _buttons[row, column] = button;
                 Controls.Add(button);
             }
@@ -61,10 +59,12 @@ public class CalculatorForm : Form
         var buttonHeight = (ClientSize.Height - minLabelHeight) / 4;
         var labelHeight = ClientSize.Height - (buttonHeight * 4);
 
+        // Resize label
         _label.Location = new Point(0, 0);
         _label.Size = new Size(ClientSize.Width, labelHeight);
         _label.TextAlign = ContentAlignment.MiddleRight;
 
+        // Resize buttons
         for (var row = 0; row < 4; ++row)
         {
             for (var column = 0; column < 4; ++column)

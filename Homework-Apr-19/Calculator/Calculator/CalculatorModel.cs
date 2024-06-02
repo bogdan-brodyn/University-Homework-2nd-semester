@@ -1,15 +1,25 @@
 namespace Calculator;
 
+using System.ComponentModel;
+
 /// <summary>
 /// Represents calculator model.
 /// </summary>
-public class CalculatorModel
+public class CalculatorModel : INotifyPropertyChanged
 {
     private int _firstOperand;
     private int _secondOperand;
     private Func<int, int, int>? _operator;
-    private char _operatorChar;
     private CalculatorState _state = new InitialState();
+    private char _operatorChar;
+
+    /// <inheritdoc/>
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <summary>
+    /// Gets current expression text (infix notation).
+    /// </summary>
+    public string CurrentExpressionText => GetCurrentExpressionText();
 
     /// <summary>
     /// Receives an external influence and produces a reaction.
@@ -23,6 +33,8 @@ public class CalculatorModel
         {
             _operatorChar = externalInfluenceChar;
         }
+
+        NotifyPropertyChanged(nameof(CurrentExpressionText));
     }
 
     /// <summary>
@@ -53,5 +65,13 @@ public class CalculatorModel
         }
 
         throw new Exception("Data structure integrity is violated.");
+    }
+
+    private void NotifyPropertyChanged(string propertyName)
+    {
+        if (PropertyChanged is not null)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
